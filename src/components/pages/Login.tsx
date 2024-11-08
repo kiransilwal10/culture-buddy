@@ -1,72 +1,42 @@
 import { useState } from 'react';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Link } from 'react-router-dom';// Correctly import the image
 
-export default function SignUpForm() {
+function Login() {
     const auth = getAuth();
     const navigate = useNavigate();
-    const db = getFirestore();
 
     const [authing, setAuthing] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    const signUpWithGoogle = async () => {
+    const signInWithGoogle = async () => {
         setAuthing(true);
         signInWithPopup(auth, new GoogleAuthProvider())
-            .then(async (response) => {
-                const uid = response.user.uid;
-                console.log(uid);
-                await setDoc(doc(db, 'users', uid), {
-                    uid: uid,
-                    email: response.user.email,
-                    createdAt: new Date(),
-                });
+            .then((response) => {
+                console.log(response.user.uid);
                 navigate('/');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
-                setError(error.message);
                 setAuthing(false);
             });
     };
 
-    const signUpWithEmail = async () => {
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
+    const signInWithEmail = async () => {
         setAuthing(true);
         setError('');
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(async (response) => {
-                const uid = response.user.uid;
-                console.log(uid);
-                await setDoc(doc(db, 'users', uid), {
-                    uid: uid,
-                    email: response.user.email,
-                    firstName: firstName,
-                    lastName: lastName,
-                    createdAt: new Date(),
-                });
+        signInWithEmailAndPassword(auth, email, password)
+            .then((response) => {
+                console.log(response.user.uid);
                 navigate('/');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
                 setError(error.message);
                 setAuthing(false);
@@ -74,93 +44,70 @@ export default function SignUpForm() {
     };
 
     return (
-        <div className="flex items-center justify-center w-screen h-screen">
-        <Card className="mx-auto max-w-sm w-full">
-            <CardHeader>
-                <CardTitle className="text-xl">Sign Up</CardTitle>
-                <CardDescription>
-                    Enter your information to create an account
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-4">
+        <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen overflow-hidden">
+            <div className="flex items-center justify-center py-12">
+                <div className="mx-auto grid w-[350px] gap-6">
+                    <div className="grid gap-2 text-center">
+                        <h1 className="text-3xl font-bold">Login</h1>
+                        <p className="text-balance text-muted-foreground">
+                            Enter your email below to login to your account
+                        </p>
+                    </div>
+                    <div className="grid gap-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="first-name">First name</Label>
+                            <Label htmlFor="email">Email</Label>
                             <Input
-                                id="first-name"
-                                placeholder="Max"
+                                id="email"
+                                type="email"
+                                placeholder="m@example.com"
                                 required
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="last-name">Last name</Label>
+                            <div className="flex items-center">
+                                <Label htmlFor="password">Password</Label>
+                                <Link
+                                    to="/forgot-password"
+                                    className="ml-auto inline-block text-sm underline"
+                                >
+                                    Forgot your password?
+                                </Link>
+                            </div>
                             <Input
-                                id="last-name"
-                                placeholder="Robinson"
+                                id="password"
+                                type="password"
                                 required
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                        {error && <div className="text-red-500">{error}</div>}
+                        <Button onClick={signInWithEmail} disabled={authing} className="w-full">
+                            Login
+                        </Button>
+                        <Button onClick={signInWithGoogle} disabled={authing} variant="outline" className="w-full">
+                            Login with Google
+                        </Button>
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            placeholder="m@example.com"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                    <div className="mt-4 text-center text-sm">
+                        Don&apos;t have an account?{" "}
+                        <Link to="/signup" className="underline">
+                            Sign up
+                        </Link>
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="confirm-password">Confirm Password</Label>
-                        <Input
-                            id="confirm-password"
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                    </div>
-                    {error && <div className="text-red-500">{error}</div>}
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        onClick={signUpWithEmail}
-                        disabled={authing}
-                    >
-                        Create an account
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={signUpWithGoogle}
-                        disabled={authing}
-                    >
-                        Sign up with Google
-                    </Button>
                 </div>
-                <div className="mt-4 text-center text-sm">
-                    Already have an account?{" "}
-                    <a href="/login" className="underline">
-                        Sign in
-                    </a>
-                </div>
-            </CardContent>
-        </Card>
+            </div>
+            <div className="hidden bg-muted lg:block">
+                <img
+                    src="src/assets/hero_ai.png" // Use the imported image
+                    alt="Image"
+                    className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+                />
+            </div>
         </div>
-    )
+    );
 }
+
+export default Login;

@@ -1,7 +1,5 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { About } from "./components/About";
-import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { Navbar } from "./components/Navbar";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -20,8 +18,6 @@ function App() {
           element={
             <>
               <Hero />
-              <About />
-              <Footer />
             </>
           }
         />
