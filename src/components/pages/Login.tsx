@@ -20,7 +20,7 @@ function Login() {
         signInWithPopup(auth, new GoogleAuthProvider())
             .then((response) => {
                 console.log(response.user.uid);
-                navigate('/');
+                navigate('/bot-creator');
             })
             .catch((error) => {
                 console.log(error);
@@ -34,7 +34,7 @@ function Login() {
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
                 console.log(response.user.uid);
-                navigate('/');
+                navigate('/bot-creator');
             })
             .catch((error) => {
                 console.log(error);

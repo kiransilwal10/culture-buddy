@@ -5,7 +5,9 @@ import { Navbar } from "./components/Navbar";
 import { ScrollToTop } from "./components/ScrollToTop";
 import Signup from "./components/pages/Signup";
 import Login from "./components/pages/Login";
+import EmployeeChatBotCreator from "@/components/pages/EmployeeChatBotCreator.tsx";
 import "./App.css";
+import BotCustomization from "@/components/pages/BotCustomization.tsx";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         {/* Signup and Login Pages */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/bot-creator" element={<EmployeeChatBotCreator />} />
+        <Route path={"/bot-customization"} element={<BotCustomization />} />
       </Routes>
       <ScrollToTop />
     </Router>
