@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/firebaseRouter';
+import companyRoutes from './routes/companyRouter'
 import { chatbotResponse } from './controllers/gptController';
 import multer from 'multer';
 import { upsertDocuments } from './config/pinecone';
@@ -25,6 +26,7 @@ const upload = multer({ storage: storage });
 
 app.use(express.json());
 app.use('/api/users', userRoutes);
+app.use('/api/companies', companyRoutes);
 
 app.post('/chatbot', chatbotResponse);
 
