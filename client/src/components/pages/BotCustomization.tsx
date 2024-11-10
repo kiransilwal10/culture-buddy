@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, useRef } from "react"
+import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,6 +29,7 @@ export default function BotCustomization() {
             fileInputRef.current.value = ""
         }
     }
+    const navigate = useNavigate();
 
     const handleRemoveFile = (index: number) => {
         setFiles((prevFiles) => {
@@ -35,6 +37,7 @@ export default function BotCustomization() {
             return prevFiles.filter((_, i) => i !== index)
         })
     }
+
 
     const onSave = async () => {
         const formData = new FormData()
@@ -89,6 +92,7 @@ export default function BotCustomization() {
 
             const data = await response.json()
             console.log("Documents uploaded successfully:", data)
+            navigate('/bot-edit');
         } catch (error) {
             console.error("Error uploading documents:", error)
         }

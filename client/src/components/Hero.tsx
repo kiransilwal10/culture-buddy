@@ -8,7 +8,7 @@ export const Hero = () => {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    navigate("/signup");
+    navigate("/login");
   };
 
   return (
