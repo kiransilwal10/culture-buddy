@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion"
 import {
     Form,
     FormControl,
@@ -13,7 +14,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import AnimatedCircularProgressBar from "@/components/ui/animated-circular-progress-bar.tsx";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 const formSchema = z.object({
     companyname: z.string().min(1).max(255),
@@ -45,31 +47,31 @@ export function MyForm() {
 
     useEffect(() => {
         if (loading) {
-            const handleIncrement = (prev: number) => {
-                if (prev >= 100) {
-                    return 100;
-                }
-                return prev + 10;
-            };
-
             const interval = setInterval(() => {
-                setProgress(handleIncrement);
+                setProgress((prevProgress) => {
+                    if (prevProgress >= 100) {
+                        clearInterval(interval);
+                        setLoading(false);
+                        return 100;
+                    }
+                    return prevProgress + 10;
+                });
             }, 300);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                setLoading(false);
-                navigate("/bot-customization");
-            }, 3000);
 
             return () => clearInterval(interval);
         }
-    }, [loading, navigate]);
+    }, [loading]);
+
+    useEffect(() => {
+        if (!loading && progress === 100) {
+            navigate("/bot-customization");
+        }
+    }, [loading, progress, navigate]);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true); 
         const storedUser = sessionStorage.getItem('userData');
-        var userEmail = "";
+        let userEmail = "";
         if (storedUser) {
             const user = JSON.parse(storedUser);
             userEmail = user.email;
@@ -135,126 +137,170 @@ export function MyForm() {
           alert("Failed to save company. Please try again.");
         }
       }
-    
+
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-black">
-            {loading ? (
-                <AnimatedCircularProgressBar
-                    max={100}
-                    min={0}
-                    value={progress}
-                    gaugePrimaryColor="rgb(79 70 229)"
-                    gaugeSecondaryColor="rgba(0, 0, 0, 0.1)"
-                />
-            ) : (
-                <Form {...form}>
-                    <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-4 bg-white dark:bg-gray-800 shadow-md rounded-md max-w-lg w-full">
-                        {step === 1 && (
-                            <>
-                                <FormField
-                                    control={form.control}
-                                    name="companyname"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">Company Name</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Company Name" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+            <Card className="w-full max-w-2xl">
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center">Create Your ChatBot</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center space-y-4">
+                            <Progress value={progress} className="w-full" />
+                            <p className="text-center text-gray-600 dark:text-gray-400">Creating your ChatBot...</p>
+                        </div>
+                    ) : (
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <AnimatePresence mode="wait">
+                                    {step === 1 && (
+                                        <motion.div
+                                            key="step1"
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: 20 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <FormField
+                                                control={form.control}
+                                                name="companyname"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Company Name</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Enter your company name" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="industry"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Industry</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Enter your industry" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="companysize"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Company Size</FormLabel>
+                                                        <FormControl>
+                                                            <Input type="number" placeholder="Enter company size" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="corevalues"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Core Values</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Enter your core values" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </motion.div>
                                     )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="industry"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">Industry</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Industry" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
+                                    {step === 2 && (
+                                        <motion.div
+                                            key="step2"
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: 20 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <FormField
+                                                control={form.control}
+                                                name="botname"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>ChatBot Name</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Enter a name for your ChatBot" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="tone"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Tone</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Enter the desired tone" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="personality"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Personality</FormLabel>
+                                                        <FormControl>
+                                                            <Input placeholder="Describe the bot's personality" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </motion.div>
                                     )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="companysize"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">Company Size</FormLabel>
-                                            <FormControl>
-                                                <Input type="number" placeholder="Company Size" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="corevalues"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">Core Values</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Core Values" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <Button type="button" onClick={() => setStep(2)} className="bg-blue-500 dark:bg-blue-700 text-white p-2 rounded-md">Next</Button>
-                            </>
-                        )}
-                        {step === 2 && (
-                            <>
-                                <FormField
-                                    control={form.control}
-                                    name="botname"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">ChatBot Name</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="ChatBot Name" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="tone"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">Tone</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Tone" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="personality"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-gray-900 dark:text-gray-100">Personality</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Personality" {...field} className="border p-2 rounded-md w-full bg-gray-50 dark:bg-gray-700 dark:text-gray-100" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <Button type="button" onClick={() => setStep(1)} className="bg-blue-500 dark:bg-blue-700 text-white p-2 mr-4 rounded-md">Back</Button>
-                                <Button type="submit" className="bg-blue-500 dark:bg-blue-700 text-white p-2 rounded-md">Submit</Button>
-                            </>
-                        )}
-                    </form>
-                </Form>
-            )}
+                                </AnimatePresence>
+                            </form>
+                        </Form>
+                    )}
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                    {step === 2 && (
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setStep(1)}
+                            className="w-[120px]"
+                        >
+                            Previous
+                        </Button>
+                    )}
+                    {step === 1 ? (
+                        <Button
+                            type="button"
+                            onClick={() => setStep(2)}
+                            className="w-[120px] ml-auto"
+                        >
+                            Next
+                        </Button>
+                    ) : (
+                        <Button
+                            type="submit"
+                            onClick={form.handleSubmit(onSubmit)}
+                            className="w-[120px] ml-auto"
+                        >
+                            Submit
+                        </Button>
+                    )}
+                </CardFooter>
+            </Card>
         </div>
-    );
+    )
 }

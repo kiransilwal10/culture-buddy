@@ -1,187 +1,128 @@
-import { useState, ChangeEvent, useRef } from "react";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { motion, AnimatePresence } from "framer-motion";
-import { FileIcon, XIcon, Eye, EyeOff, Copy } from "lucide-react";
+import { useState, ChangeEvent, useRef } from "react"
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { motion, AnimatePresence } from "framer-motion"
+import { FileIcon, XIcon } from "lucide-react"
 
 interface FileWithPreview extends File {
-    preview: string;
-    fileName: string;
+    preview: string
+    fileName: string
 }
 
 export default function BotCustomization() {
-    const [files, setFiles] = useState<FileWithPreview[]>([]);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [showUserId, setShowUserId] = useState(false);
-    const [showApiKey, setShowApiKey] = useState(false);
-
-    const userId = "user_1234567890";
-    const apiKey = "sk_live_abcdefghijklmnopqrstuvwxyz123456";
+    const [files, setFiles] = useState<FileWithPreview[]>([])
+    const [botDescription, setBotDescription] = useState("")
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFiles = Array.from(event.target.files || []).map((file) => ({
             ...file,
             preview: URL.createObjectURL(file),
             fileName: file.name,
-        }));
-        setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
-        
+        }))
+        setFiles((prevFiles) => [...prevFiles, ...uploadedFiles])
+
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = ""
         }
-    };
-    
+    }
 
     const handleRemoveFile = (index: number) => {
         setFiles((prevFiles) => {
-            URL.revokeObjectURL(prevFiles[index].preview);
-            return prevFiles.filter((_, i) => i !== index);
-        });
-    };
-
-    const maskString = (str: string) => '*'.repeat(str.length);
-
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
-    };
+            URL.revokeObjectURL(prevFiles[index].preview)
+            return prevFiles.filter((_, i) => i !== index)
+        })
+    }
 
     const onSave = async () => {
-        const formData = new FormData();
-    
+        const formData = new FormData()
+
         // Log files before appending to FormData
-        console.log("Files to be uploaded:", files);
-    
+        console.log("Files to be uploaded:", files)
+
         // Use Promise.all to ensure asynchronous tasks are completed before moving forward
         const filePromises = files.map(async (fileObj) => {
-            const fileName = fileObj.fileName;
-            const preview = fileObj.preview; // This is likely a Blob URL
-    
+            const fileName = fileObj.fileName
+            const preview = fileObj.preview // This is likely a Blob URL
+
             if (preview) {
                 // Convert the Blob URL to a Blob object
                 try {
-                    const blob = await fetch(preview).then((res) => res.blob());
-    
+                    const blob = await fetch(preview).then((res) => res.blob())
+
                     // Create a new File object from the Blob and fileName
-                    const file = new File([blob], fileName, { type: blob.type });
-                    console.log("Created file:", file);
-    
+                    const file = new File([blob], fileName, { type: blob.type })
+                    console.log("Created file:", file)
+
                     // Append the new file to FormData
-                    formData.append('documents', file);
+                    formData.append('documents', file)
                 } catch (error) {
-                    console.error("Error fetching blob:", error);
+                    console.error("Error fetching blob:", error)
                 }
             } else {
-                console.warn("Preview not found for file:", fileObj);
+                console.warn("Preview not found for file:", fileObj)
             }
-        });
-    
+        })
+
         // Wait for all promises to resolve
-        await Promise.all(filePromises);
-    
+        await Promise.all(filePromises)
+
+        // Add bot description to FormData if needed
+        if (botDescription) {
+            formData.append('description', botDescription)
+        }
+
         // Log FormData content after all files have been appended
-        console.log("FormData content:", [...formData.entries()]);
-    
+        console.log("FormData content:", [...formData.entries()])
+
         try {
             const response = await fetch('http://localhost:3000/uploadDocuments', {
                 method: 'POST',
                 body: formData,
-            });
-    
+            })
+
             if (!response.ok) {
-                throw new Error('Failed to upload documents');
+                throw new Error('Failed to upload documents')
             }
-    
-            const data = await response.json();
-            console.log("Documents uploaded successfully:", data);
+
+            const data = await response.json()
+            console.log("Documents uploaded successfully:", data)
         } catch (error) {
-            console.error("Error uploading documents:", error);
+            console.error("Error uploading documents:", error)
         }
-    };
-    
-    
-    
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 p-6">
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl font-bold text-center text-black mb-8 text-primary"
+                className="text-4xl font-bold text-center mb-8 text-black"
             >
-                Bot Customization
+                Buddy Customization
             </motion.h1>
-            <div className="max-w-4xl mx-auto space-y-8">
+            <div className="max-w-2xl mx-auto space-y-8">
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <h2 className="text-2xl font-semibold text-primary">Sensitive Information</h2>
+                        <h2 className="text-2xl font-semibold text-black">Customize Your Buddy</h2>
+                        <p className="text-muted-foreground">Add additional company information, rules, and values you would like the buddy to know</p>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="userId" className="text-sm font-medium">
-                                User ID
-                            </Label>
-                            <div className="flex">
-                                <Input
-                                    id="userId"
-                                    value={showUserId ? userId : maskString(userId)}
-                                    readOnly
-                                    className="flex-grow"
-                                />
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setShowUserId(!showUserId)}
-                                    aria-label={showUserId ? "Hide User ID" : "Show User ID"}
-                                >
-                                    {showUserId ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => copyToClipboard(userId)}
-                                    aria-label="Copy User ID"
-                                >
-                                    <Copy className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="apiKey" className="text-sm font-medium">
-                                API Key
-                            </Label>
-                            <div className="flex">
-                                <Input
-                                    id="apiKey"
-                                    value={showApiKey ? apiKey : maskString(apiKey)}
-                                    readOnly
-                                    className="flex-grow"
-                                />
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setShowApiKey(!showApiKey)}
-                                    aria-label={showApiKey ? "Hide API Key" : "Show API Key"}
-                                >
-                                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => copyToClipboard(apiKey)}
-                                    aria-label="Copy API Key"
-                                >
-                                    <Copy className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
+                    <CardContent>
+                        <Textarea
+                            placeholder="Describe your bot here..."
+                            value={botDescription}
+                            onChange={(e) => setBotDescription(e.target.value)}
+                            className="min-h-[100px]"
+                        />
                     </CardContent>
                 </Card>
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <h2 className="text-2xl font-semibold text-primary">Upload Documents</h2>
-                        <p className="text-muted-foreground">Choose the files you want your buddy to remember.</p>
+                        <h2 className="text-2xl font-semibold text-black">Upload Documents</h2>
+                        <p className="text-muted-foreground">Choose the files you want your bot to learn from.</p>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Input
@@ -221,12 +162,12 @@ export default function BotCustomization() {
                             ))}
                         </AnimatePresence>
                     </CardContent>
-                    <CardFooter className="flex justify-between">
+                    <CardFooter className="flex justify-end space-x-4">
                         <Button variant="outline">Cancel</Button>
-                        <Button onClick={onSave}>Save</Button>
+                        <Button onClick={onSave}>Save Changes</Button>
                     </CardFooter>
                 </Card>
             </div>
         </div>
-    );
+    )
 }
