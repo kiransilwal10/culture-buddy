@@ -2,9 +2,9 @@ import { useState, ChangeEvent, useRef } from "react"
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { motion, AnimatePresence } from "framer-motion"
-import { FileIcon, XIcon, Eye, EyeOff, Copy } from "lucide-react"
+import { FileIcon, XIcon } from "lucide-react"
 
 interface FileWithPreview extends File {
     preview: string
@@ -13,12 +13,8 @@ interface FileWithPreview extends File {
 
 export default function BotCustomization() {
     const [files, setFiles] = useState<FileWithPreview[]>([])
+    const [botDescription, setBotDescription] = useState("")
     const fileInputRef = useRef<HTMLInputElement>(null)
-    const [showUserId, setShowUserId] = useState(false)
-    const [showApiKey, setShowApiKey] = useState(false)
-
-    const userId = "user_1234567890"
-    const apiKey = "sk_live_abcdefghijklmnopqrstuvwxyz123456"
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFiles = Array.from(event.target.files || []).map((file) => ({
@@ -29,7 +25,7 @@ export default function BotCustomization() {
         setFiles((prevFiles) => [...prevFiles, ...uploadedFiles])
 
         if (fileInputRef.current) {
-            fileInputRef.current.value = ''
+            fileInputRef.current.value = ""
         }
     }
 
@@ -40,92 +36,35 @@ export default function BotCustomization() {
         })
     }
 
-    const maskString = (str: string) => '*'.repeat(str.length)
-
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text)
-    }
-
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 p-6">
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl font-bold text-center text-black mb-8 text-primary"
+                className="text-4xl font-bold text-center mb-8 text-black"
             >
-                Bot Customization
+                Buddy Customization
             </motion.h1>
-            <div className="max-w-4xl mx-auto space-y-8">
+            <div className="max-w-2xl mx-auto space-y-8">
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <h2 className="text-2xl font-semibold text-primary">Sensitive Information</h2>
+                        <h2 className="text-2xl font-semibold text-black">Customize Your Buddy</h2>
+                        <p className="text-muted-foreground">Add additional company information, rules, and values you would like the buddy to know</p>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="userId" className="text-sm font-medium">
-                                User ID
-                            </Label>
-                            <div className="flex">
-                                <Input
-                                    id="userId"
-                                    value={showUserId ? userId : maskString(userId)}
-                                    readOnly
-                                    className="flex-grow"
-                                />
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setShowUserId(!showUserId)}
-                                    aria-label={showUserId ? "Hide User ID" : "Show User ID"}
-                                >
-                                    {showUserId ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => copyToClipboard(userId)}
-                                    aria-label="Copy User ID"
-                                >
-                                    <Copy className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="apiKey" className="text-sm font-medium">
-                                API Key
-                            </Label>
-                            <div className="flex">
-                                <Input
-                                    id="apiKey"
-                                    value={showApiKey ? apiKey : maskString(apiKey)}
-                                    readOnly
-                                    className="flex-grow"
-                                />
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setShowApiKey(!showApiKey)}
-                                    aria-label={showApiKey ? "Hide API Key" : "Show API Key"}
-                                >
-                                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => copyToClipboard(apiKey)}
-                                    aria-label="Copy API Key"
-                                >
-                                    <Copy className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
+                    <CardContent>
+                        <Textarea
+                            placeholder="Describe your bot here..."
+                            value={botDescription}
+                            onChange={(e) => setBotDescription(e.target.value)}
+                            className="min-h-[100px]"
+                        />
                     </CardContent>
                 </Card>
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <h2 className="text-2xl font-semibold text-primary">Upload Documents</h2>
-                        <p className="text-muted-foreground">Choose the files you want your buddy to remember.</p>
+                        <h2 className="text-2xl font-semibold text-black">Upload Documents</h2>
+                        <p className="text-muted-foreground">Choose the files you want your bot to learn from.</p>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Input
@@ -165,9 +104,9 @@ export default function BotCustomization() {
                             ))}
                         </AnimatePresence>
                     </CardContent>
-                    <CardFooter className="flex justify-between">
+                    <CardFooter className="flex justify-end space-x-4">
                         <Button variant="outline">Cancel</Button>
-                        <Button>Save</Button>
+                        <Button>Save Changes</Button>
                     </CardFooter>
                 </Card>
             </div>
