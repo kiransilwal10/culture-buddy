@@ -5,16 +5,15 @@ import path from 'path';
 import pdf from 'pdf-parse';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { getEmbeddings } from '../controllers/gptController';
-import mammoth from 'mammoth';  // For DOCX file processing
+import mammoth from 'mammoth';
+import { v4 as uuidv4 } from 'uuid';
 
 const pc = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
 });
 const PINECONE_INDEX_NAME = 'culturebuddy';
-
 const app = express();
-
-const upload = multer({ dest: 'uploads/' });  // Temporary folder for storing uploaded files
+const upload = multer({ dest: 'uploads/' });
 
 interface Document {
   id: string;
@@ -33,7 +32,7 @@ interface Vector {
 
 async function extractTextFromFile(filePath: string): Promise<string> {
   console.log('Absolute file path:', path.resolve(filePath));
-  const extension = path.extname(filePath);  // Extract extension from mimetype
+  const extension = path.extname(filePath); 
 
   console.log(`Processing file: ${filePath}, Type: ${extension}`);
 
@@ -42,10 +41,8 @@ async function extractTextFromFile(filePath: string): Promise<string> {
     const pdfData = await pdf(dataBuffer);
     return pdfData.text;
   } else if (extension === '.txt') {
-    // Handle simple text files
     return fs.readFileSync(filePath, 'utf-8');
   } else if (extension === '.msword' || extension === 'wordprocessingml.document') {
-    // Handle DOCX files
     const docxBuffer = fs.readFileSync(filePath);
     const { value } = await mammoth.extractRawText({ buffer: docxBuffer });
     return value;
@@ -54,7 +51,28 @@ async function extractTextFromFile(filePath: string): Promise<string> {
   }
 }
 
-// Function to upsert documents into Pinecone
+function getContentSize(content: string): number {
+  return Buffer.byteLength(content, 'utf-8');
+}
+
+// Function to split document content if it exceeds the size limit
+function splitContent(content: string): string[] {
+  const maxContentSize = 40960; // Pinecone's metadata limit in bytes
+  const contentSize = getContentSize(content);
+
+  if (contentSize <= maxContentSize) {
+    return [content]; // Return the single content if it's within the size limit
+  }
+
+  // Split content into two parts if it exceeds the size limit
+  const midPoint = Math.floor(content.length / 2);
+  const part1 = content.slice(0, midPoint);
+  const part2 = content.slice(midPoint);
+
+  return [part1, part2]; // Return two parts of content
+}
+
+// Function to upsert documents with content size check and split if necessary
 export const upsertDocuments = async (filePaths: string[]): Promise<void> => {
   const index = pc.Index(PINECONE_INDEX_NAME);
 
@@ -69,20 +87,55 @@ export const upsertDocuments = async (filePaths: string[]): Promise<void> => {
     })
   );
 
-  const vectors: Vector[] = await Promise.all(
-    docs.map(async (doc) => ({
-      id: doc.id,
-      values: await getEmbeddings(doc.context),
-      metadata: {
-        subject: doc.subject,
-        context: doc.context,
-      },
-    }))
-  );
+  
 
-  // Upsert the array of Vector objects directly into Pinecone
-  await index.upsert(vectors);
+  // Iterate through the documents and handle content size check
+  for (const doc of docs) {
+    const embedding = await getEmbeddings(doc.context);
+
+    const contentParts = splitContent(doc.context); // Split content if it exceeds size limit
+
+    // If content is split, create separate vectors for each part
+    for (const part of contentParts) {
+      const uniqueId = `doc-${Date.now()}-${uuidv4()}`;
+      const vectors: Vector[] = [];
+      vectors.push({
+        id: uniqueId,
+        values: embedding,
+        metadata: {
+          subject: doc.subject,  
+          context: part, 
+        },
+      });
+        // Upload the vectors to Pinecone
+      await index.upsert(vectors);
+    }
+  }
+
 };
+
+export const upsertJsonDocument = async (jsonData: object, subject: string): Promise<void> => {
+  const index = pc.Index(PINECONE_INDEX_NAME);
+
+  const context = JSON.stringify(jsonData);
+  const uniqueId = `doc-${Date.now()}-${uuidv4()}`;
+  const doc: Document = {
+    id: uniqueId,  
+    subject: subject,
+    context: context,
+  };
+
+  const vector: Vector = {
+    id: doc.id,
+    values: await getEmbeddings(doc.context),
+    metadata: {
+      subject: doc.subject,
+      context: doc.context,
+    },
+  };
+  await index.upsert([vector]);
+};
+
 
 export const searchQuery = async (query: string): Promise<Vector[]> => {
     const index = pc.Index(PINECONE_INDEX_NAME);

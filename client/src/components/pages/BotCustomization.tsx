@@ -1,51 +1,107 @@
-import { useState, ChangeEvent, useRef } from "react"
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { motion, AnimatePresence } from "framer-motion"
-import { FileIcon, XIcon, Eye, EyeOff, Copy } from "lucide-react"
+import { useState, ChangeEvent, useRef } from "react";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { motion, AnimatePresence } from "framer-motion";
+import { FileIcon, XIcon, Eye, EyeOff, Copy } from "lucide-react";
 
 interface FileWithPreview extends File {
-    preview: string
-    fileName: string
+    preview: string;
+    fileName: string;
 }
 
 export default function BotCustomization() {
-    const [files, setFiles] = useState<FileWithPreview[]>([])
-    const fileInputRef = useRef<HTMLInputElement>(null)
-    const [showUserId, setShowUserId] = useState(false)
-    const [showApiKey, setShowApiKey] = useState(false)
+    const [files, setFiles] = useState<FileWithPreview[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showUserId, setShowUserId] = useState(false);
+    const [showApiKey, setShowApiKey] = useState(false);
 
-    const userId = "user_1234567890"
-    const apiKey = "sk_live_abcdefghijklmnopqrstuvwxyz123456"
+    const userId = "user_1234567890";
+    const apiKey = "sk_live_abcdefghijklmnopqrstuvwxyz123456";
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFiles = Array.from(event.target.files || []).map((file) => ({
             ...file,
             preview: URL.createObjectURL(file),
             fileName: file.name,
-        }))
-        setFiles((prevFiles) => [...prevFiles, ...uploadedFiles])
-
+        }));
+        setFiles((prevFiles) => [...prevFiles, ...uploadedFiles]);
+        
         if (fileInputRef.current) {
-            fileInputRef.current.value = ''
+            fileInputRef.current.value = '';
         }
-    }
+    };
+    
 
     const handleRemoveFile = (index: number) => {
         setFiles((prevFiles) => {
-            URL.revokeObjectURL(prevFiles[index].preview)
-            return prevFiles.filter((_, i) => i !== index)
-        })
-    }
+            URL.revokeObjectURL(prevFiles[index].preview);
+            return prevFiles.filter((_, i) => i !== index);
+        });
+    };
 
-    const maskString = (str: string) => '*'.repeat(str.length)
+    const maskString = (str: string) => '*'.repeat(str.length);
 
     const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text)
-    }
+        navigator.clipboard.writeText(text);
+    };
 
+    const onSave = async () => {
+        const formData = new FormData();
+    
+        // Log files before appending to FormData
+        console.log("Files to be uploaded:", files);
+    
+        // Use Promise.all to ensure asynchronous tasks are completed before moving forward
+        const filePromises = files.map(async (fileObj) => {
+            const fileName = fileObj.fileName;
+            const preview = fileObj.preview; // This is likely a Blob URL
+    
+            if (preview) {
+                // Convert the Blob URL to a Blob object
+                try {
+                    const blob = await fetch(preview).then((res) => res.blob());
+    
+                    // Create a new File object from the Blob and fileName
+                    const file = new File([blob], fileName, { type: blob.type });
+                    console.log("Created file:", file);
+    
+                    // Append the new file to FormData
+                    formData.append('documents', file);
+                } catch (error) {
+                    console.error("Error fetching blob:", error);
+                }
+            } else {
+                console.warn("Preview not found for file:", fileObj);
+            }
+        });
+    
+        // Wait for all promises to resolve
+        await Promise.all(filePromises);
+    
+        // Log FormData content after all files have been appended
+        console.log("FormData content:", [...formData.entries()]);
+    
+        try {
+            const response = await fetch('http://localhost:3000/uploadDocuments', {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to upload documents');
+            }
+    
+            const data = await response.json();
+            console.log("Documents uploaded successfully:", data);
+        } catch (error) {
+            console.error("Error uploading documents:", error);
+        }
+    };
+    
+    
+    
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 p-6">
             <motion.h1
@@ -167,10 +223,10 @@ export default function BotCustomization() {
                     </CardContent>
                     <CardFooter className="flex justify-between">
                         <Button variant="outline">Cancel</Button>
-                        <Button>Save</Button>
+                        <Button onClick={onSave}>Save</Button>
                     </CardFooter>
                 </Card>
             </div>
         </div>
-    )
+    );
 }

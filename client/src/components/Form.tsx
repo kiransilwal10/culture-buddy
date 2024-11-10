@@ -66,10 +66,76 @@ export function MyForm() {
         }
     }, [loading, navigate]);
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
-        console.log(values);
-    }
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true); 
+        const storedUser = sessionStorage.getItem('userData');
+        var userEmail = "";
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            userEmail = user.email;
+        }
+        try {
+          // Make the API call to save the company data
+          const response = await fetch("http://localhost:3000/api/companies/save", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              companyName: values.companyname,
+              employerEmail: userEmail,
+              industry: values.industry,
+              numberOfWorkers: values.companysize,
+              botName: values.botname,
+              coreValues: values.corevalues,
+              botTone: values.tone,
+              botPersonality: values.personality,
+            }),
+          });
+    
+          if (!response.ok) {
+            throw new Error("Failed to save company");
+          }
+    
+          const data = await response.json();
+          console.log("Company saved:", data); 
+
+        const uploadResponse = await fetch("http://localhost:3000/uploadJsonDocument", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                subject: "Bot Detail",
+                jsonData: JSON.stringify({
+                    companyName: values.companyname,
+                    industry: values.industry,
+                    numberOfWorkers: values.companysize,
+                    coreValues: values.corevalues,
+                    botName: values.botname,
+                    botTone: values.tone,
+                    botPersonality: values.personality,
+                }),
+            }),
+        });
+
+        if (!uploadResponse.ok) {
+            throw new Error("Failed to upload JSON document");
+        }
+
+        const uploadData = await uploadResponse.json();
+        console.log("Document uploaded:", uploadData);
+
+    
+          setLoading(false);
+          navigate("/bot-customization"); 
+        } catch (error) {
+          console.error("Error submitting form:", error);
+          setLoading(false); 
+          alert("Failed to save company. Please try again.");
+        }
+      }
+    
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-black">

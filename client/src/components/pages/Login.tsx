@@ -17,15 +17,50 @@ function Login() {
 
     const signInWithGoogle = async () => {
         setAuthing(true);
-        signInWithPopup(auth, new GoogleAuthProvider())
-            .then((response) => {
-                console.log(response.user.uid);
-                navigate('/bot-creator');
-            })
-            .catch((error) => {
-                console.log(error);
-                setAuthing(false);
+        try {
+            const response = await signInWithPopup(auth, new GoogleAuthProvider());
+            console.log(response.user.uid);
+            console.log(response.user);
+    
+            // Save user data to session storage
+            const userData = {
+                email: response.user.email,
+                name: response.user.displayName,
+            };
+            sessionStorage.setItem('userData', JSON.stringify(userData));
+    
+            // Make API call to check if company exists
+            const checkResponse = await fetch('http://localhost:3000/api/companies/check', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ employerEmail: response.user.email }),
             });
+    
+            const checkResult = await checkResponse.json();
+    
+            if (checkResponse.ok) {
+                navigate('/bot-customization');
+                const company = checkResult.company;
+                const companyDetail = {
+                    "companyName": company.companyName,
+                    "employerEmail":company.employerEmail,
+                    "industry": company.industry,
+                    "numberOfWorkers": company.numberOfWorkers,
+                    "botName": company.botName,
+                    "coreValues": company.coreValues,
+                    "botTone": company.botTone,
+                    "botPersonality": company.botPersonality
+                };
+                sessionStorage.setItem('botData', JSON.stringify(companyDetail));
+            } else {
+                navigate('/bot-creator');
+            }
+        } catch (error) {
+            console.log(error);
+            setAuthing(false);
+        }
     };
 
     const signInWithEmail = async () => {
