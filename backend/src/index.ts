@@ -4,13 +4,16 @@ import userRoutes from './routes/firebaseRouter';
 import companyRoutes from './routes/companyRouter'
 import { chatbotResponse } from './controllers/gptController';
 import multer from 'multer';
-import { upsertDocuments } from './config/pinecone';
+import { upsertDocuments, upsertJsonDocument } from './config/pinecone';
 import { getChatGptResponse } from './controllers/gptController';
 import { searchQuery } from './config/pinecone';
+const cors = require('cors');
+
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT || 3000;
 const memory: Map<string, string[]> = new Map();
 const storage = multer.diskStorage({
@@ -47,6 +50,24 @@ app.post('/uploadDocuments', upload.array('documents'), async (req, res) => {
     res.status(500).json({ error: 'Failed to upload documents' });
   }
 });
+
+app.post('/uploadJsonDocument', async (req, res) => {
+  try {
+    const { jsonData, subject } = req.body as { jsonData: object; subject: string };
+
+    if (!jsonData || !subject) {
+      return res.status(400).json({ error: 'jsonData and subject are required' });
+    }
+
+    await upsertJsonDocument(jsonData, subject);
+
+    res.status(200).json({ message: 'JSON document uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading JSON document:', error);
+    res.status(500).json({ error: 'Failed to upload JSON document' });
+  }
+});
+
 
 app.post('/chat', async (req: Request, res: Response) => {
   const { userId, query } = req.body as { userId: string; query: string };
