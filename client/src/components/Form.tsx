@@ -143,7 +143,7 @@ export function MyForm() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
             <Card className="w-full max-w-2xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">Create Your ChatBot</CardTitle>
+                    <CardTitle className="text-2xl font-semibold text-center">Create Your ChatBot</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -170,7 +170,7 @@ export function MyForm() {
                                                     <FormItem>
                                                         <FormLabel>Company Name</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Enter your company name" {...field} />
+                                                            <Input className="focus:" placeholder="Enter your company name" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -286,7 +286,7 @@ export function MyForm() {
                         <Button
                             type="button"
                             onClick={() => setStep(2)}
-                            className="w-[120px] ml-auto"
+                            className="w-[120px] ml-auto bg-main hover:bg-main"
                         >
                             Next
                         </Button>
@@ -294,7 +294,7 @@ export function MyForm() {
                         <Button
                             type="submit"
                             onClick={form.handleSubmit(onSubmit)}
-                            className="w-[120px] ml-auto"
+                            className="w-[120px] ml-auto bg-main hover:bg-main"
                         >
                             Submit
                         </Button>

@@ -5,66 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0b428444-b267-4e0b-9ee9-c15b7549c9c9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/client/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/client/.eslintrc.cjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/client/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/client/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/client/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/components.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/components.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/postcss.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/postcss.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/About.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/About.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ChabotUI.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Cta.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/FAQ.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Features.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Footer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Hero.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Hero.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/HeroCards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/HeroCards.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/HowItWorks.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Icons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Icons.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Newsletter.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Pages/ChabotUIPage.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Pricing.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ScrollToTop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ScrollToTop.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Services.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Sponsors.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Statistics.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Statistics.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Team.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Testimonials.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/mode-toggle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/mode-toggle.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/pages/BotCustomization.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/pages/BotCustomization.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/pages/EmployeeChatBotCreator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/pages/EmployeeChatBotCreator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/pages/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/pages/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/pages/Signup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/pages/Signup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/theme-provider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/theme-provider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/accordion.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/accordion.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/animated-circular-progress-bar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/animated-circular-progress-bar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/avatar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/avatar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/badge.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/badge.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/dropdown-menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/dropdown-menu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/input.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/label.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/label.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/navigation-menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/navigation-menu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/select.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/select.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/sheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ui/sheet.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ui/textarea.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/lib/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/vite-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/vite-env.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/tailwind.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/tsconfig.node.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +42,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "Prabin",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

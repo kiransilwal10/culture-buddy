@@ -8,6 +8,7 @@ import Login from "./components/pages/Login";
 import EmployeeChatBotCreator from "@/components/pages/EmployeeChatBotCreator.tsx";
 import "./App.css";
 import BotCustomization from "@/components/pages/BotCustomization.tsx";
+import BotEdit from "@/components/pages/BotEdit.tsx";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/bot-creator" element={<EmployeeChatBotCreator />} />
         <Route path={"/bot-customization"} element={<BotCustomization />} />
+         <Route path={"/bot-edit"} element={<BotEdit />} />
       </Routes>
       <ScrollToTop />
     </Router>

@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, useRef } from "react"
+import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,6 +29,7 @@ export default function BotCustomization() {
             fileInputRef.current.value = ""
         }
     }
+    const navigate = useNavigate();
 
     const handleRemoveFile = (index: number) => {
         setFiles((prevFiles) => {
@@ -35,6 +37,7 @@ export default function BotCustomization() {
             return prevFiles.filter((_, i) => i !== index)
         })
     }
+
 
     const onSave = async () => {
         const formData = new FormData()
@@ -89,6 +92,7 @@ export default function BotCustomization() {
 
             const data = await response.json()
             console.log("Documents uploaded successfully:", data)
+            navigate('/bot-edit');
         } catch (error) {
             console.error("Error uploading documents:", error)
         }
@@ -100,7 +104,7 @@ export default function BotCustomization() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl font-bold text-center mb-8 text-black"
+                className="text-4xl font-semibold text-center mb-8 text-black"
             >
                 Buddy Customization
             </motion.h1>
@@ -142,7 +146,7 @@ export default function BotCustomization() {
                                     transition={{ duration: 0.3 }}
                                     className="border border-border rounded-lg p-4 flex items-center gap-4 bg-card hover:bg-accent transition-colors"
                                 >
-                                    <FileIcon className="h-6 w-6 text-primary" />
+                                    <FileIcon className="h-6 w-6 text-main" />
                                     <div className="grid gap-1 text-sm flex-grow">
                                         <div className="font-medium">{file.fileName || "Untitled File"}</div>
                                         <div className="text-muted-foreground">
@@ -164,7 +168,7 @@ export default function BotCustomization() {
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
                         <Button variant="outline">Cancel</Button>
-                        <Button onClick={onSave}>Save Changes</Button>
+                        <Button className='bg-main hover:bg-main' onClick={onSave}>Save Changes</Button>
                     </CardFooter>
                 </Card>
             </div>
