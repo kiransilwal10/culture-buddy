@@ -170,7 +170,7 @@ export function MyForm() {
                                                     <FormItem>
                                                         <FormLabel>Company Name</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Enter your company name" {...field} />
+                                                            <Input className="focus:" placeholder="Enter your company name" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -286,7 +286,7 @@ export function MyForm() {
                         <Button
                             type="button"
                             onClick={() => setStep(2)}
-                            className="w-[120px] ml-auto"
+                            className="w-[120px] ml-auto bg-main hover:bg-main"
                         >
                             Next
                         </Button>
@@ -294,7 +294,7 @@ export function MyForm() {
                         <Button
                             type="submit"
                             onClick={form.handleSubmit(onSubmit)}
-                            className="w-[120px] ml-auto"
+                            className="w-[120px] ml-auto bg-main hover:bg-main"
                         >
                             Submit
                         </Button>
