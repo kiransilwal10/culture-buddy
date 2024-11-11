@@ -47,6 +47,31 @@ export default function BotCustomization() {
         navigator.clipboard.writeText(text);
     };
 
+    const onSaveText = async() => {
+        try {
+            const response = await fetch('http://localhost:3000/uploadText', { // Replace with your server URL
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              //body: JSON.stringify({ jsonData, subject }),
+            });
+        
+            if (!response.ok) {
+              const errorData = await response.json();
+              console.error('Error:', errorData.error);
+              throw new Error(`Failed to upload JSON document: ${errorData.error}`);
+            }
+        
+            const responseData = await response.json();
+            console.log('Success:', responseData.message);
+            return responseData;
+          } catch (error) {
+            console.error('Error calling uploadJsonDocument API:', error);
+            throw error;
+          }
+    }
+
     const onSave = async () => {
         const formData = new FormData();
     
