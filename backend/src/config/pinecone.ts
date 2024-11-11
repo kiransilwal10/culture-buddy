@@ -266,15 +266,8 @@ export const upsertBotText = async (text: string) => {
   const embedding = await getEmbeddings(text);
 
   const index = pc.Index(PINECONE_INDEX_NAME);
-  const currentVectorId = 'chat-record';
 
   try {
-    // const queryResult = await index.query({
-    //   id: currentVectorId ,
-    //   topK: 1,   
-    //   includeMetadata: true,
-    // });
-    
     const metadataParts = splitContent(text);
 
     for (const part of metadataParts) {

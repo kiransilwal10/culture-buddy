@@ -70,13 +70,13 @@ app.post('/uploadJsonDocument', async (req, res) => {
 
 app.post('/uploadText', async (req, res) => {
   try {
-    const { info} = req.body as { info: string };
+    const { botDescription} = req.body as { botDescription: string };
 
-    if (!info) {
+    if (!botDescription) {
       return res.status(400).json({ error: 'jsonData and subject are required' });
     }
 
-    await upsertBotText(info);
+    await upsertBotText(botDescription);
 
     res.status(200).json({ message: 'Text uploaded successfully' });
   } catch (error) {

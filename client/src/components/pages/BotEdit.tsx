@@ -54,14 +54,95 @@ export default function BotEdit() {
         })
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         // Simulating save operation
-        console.log("Saving bot description:", botDescription)
-        console.log("Saving files:", files)
-        toast({
-            title: "Changes Saved",
-            description: "Your bot has been updated successfully.",
-        })
+        if(botDescription != ""){
+            try {
+                const response = await fetch('http://localhost:3000/uploadText', { 
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ botDescription }),
+                });
+            
+                if (!response.ok) {
+                  const errorData = await response.json();
+                  console.error('Error:', errorData.error);
+                  throw new Error(`Failed to upload JSON document: ${errorData.error}`);
+                }
+            
+                const responseData = await response.json();
+                if(files.length !== 0){
+                    toast({
+                        title: "Changes Saved",
+                        description: "Your bot has been updated successfully.",
+                    })
+                }
+                console.log('Success:', responseData.message);
+              } catch (error) {
+                console.error('Error calling uploadJsonDocument API:', error);
+                throw error;
+              }
+        }
+
+        if(files.length !== 0){
+            const formData = new FormData()
+
+            // Log files before appending to FormData
+            console.log("Files to be uploaded:", files)
+    
+            // Use Promise.all to ensure asynchronous tasks are completed before moving forward
+            const filePromises = files.map(async (fileObj) => {
+                const fileName = fileObj.fileName
+                const preview = fileObj.preview // This is likely a Blob URL
+    
+                if (preview) {
+                    // Convert the Blob URL to a Blob object
+                    try {
+                        const blob = await fetch(preview).then((res) => res.blob())
+    
+                        // Create a new File object from the Blob and fileName
+                        const file = new File([blob], fileName, { type: blob.type })
+                        console.log("Created file:", file)
+    
+                        // Append the new file to FormData
+                        formData.append('documents', file)
+                    } catch (error) {
+                        console.error("Error fetching blob:", error)
+                    }
+                } else {
+                    console.warn("Preview not found for file:", fileObj)
+                }
+            })
+    
+            // Wait for all promises to resolve
+            await Promise.all(filePromises)
+    
+            // Log FormData content after all files have been appended
+            console.log("FormData content:", [...formData.entries()])
+    
+            try {
+                const response = await fetch('http://localhost:3000/uploadDocuments', {
+                    method: 'POST',
+                    body: formData,
+                })
+    
+                if (!response.ok) {
+                    throw new Error('Failed to upload documents')
+                }
+    
+                const data = await response.json()
+                console.log("Documents uploaded successfully:", data)
+                toast({
+                    title: "Changes Saved",
+                    description: "Your bot has been updated successfully.",
+                })
+            } catch (error) {
+                console.error("Error uploading documents:", error)
+            }
+        }
+
     }
 
     const copyIframeCode = () => {
