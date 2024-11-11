@@ -16,7 +16,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
-import { LogoIcon } from "./Icons";
+import Logo from '../assets/logo.png'
 
 interface RouteProps {
   href: string;
@@ -48,26 +48,24 @@ export const Navbar = () => {
   return (
       <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
         <NavigationMenu className="mx-auto">
-          <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between ">
-            <NavigationMenuItem className="font-bold flex">
+          <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between items-center">
+            <NavigationMenuItem className="font-bold flex items-center justify-left w-full">
               <a
                   rel="noreferrer noopener"
                   href="/"
-                  className="ml-2 font-bold text-xl flex"
+                  className="flex items-center justify-center"
               >
-                <LogoIcon />
-                Culture Buddy
+                <img src={Logo} alt="logo" className="w-12 h-12 mr-2" />
+                <div className="flex justify-center text-xl items-center">
+                  Culture Buddy
+                </div>
               </a>
             </NavigationMenuItem>
 
             {/* mobile */}
             <span className="flex md:hidden">
             <ModeToggle />
-
-            <Sheet
-                open={isOpen}
-                onOpenChange={setIsOpen}
-            >
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
                 <Menu
                     className="flex md:hidden h-5 w-5"
@@ -76,7 +74,6 @@ export const Navbar = () => {
                   <span className="sr-only">Menu Icon</span>
                 </Menu>
               </SheetTrigger>
-
               <SheetContent side={"left"}>
                 <SheetHeader>
                   <SheetTitle className="font-bold text-xl">
