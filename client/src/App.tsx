@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Hero } from "./components/Hero";
 import { Navbar } from "./components/Navbar";
@@ -25,7 +24,6 @@ function App() {
             </>
           }
         />
-
         {/* Signup and Login Pages */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />

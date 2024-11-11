@@ -1,13 +1,11 @@
-"use client"
-
 import { useState, ChangeEvent, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { FileIcon, XIcon, Save, ArrowLeft, Copy, Check } from "lucide-react";
+import { FileIcon, XIcon, Save, ArrowLeft, Copy, Check, Eye } from "lucide-react"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import {useToast} from "@/hooks/use-toast.ts";
+import { useToast } from "@/hooks/use-toast.ts"
 
 interface FileWithPreview extends File {
     preview: string
@@ -192,7 +190,71 @@ export default function BotEdit() {
                         </div>
                     </CardContent>
                 </Card>
-
+                <Card className="shadow-lg">
+                    <CardHeader>
+                        <h2 className="text-2xl font-semibold text-black">API Credentials</h2>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <label htmlFor="api-key" className="text-sm font-medium">
+                                API Key
+                            </label>
+                            <div className="flex items-center space-x-2">
+                                <Input
+                                    id="api-key"
+                                    type="password"
+                                    value="1234567890abcdef1234567890abcdef"
+                                    readOnly
+                                    className="font-mono"
+                                />
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => {
+                                        const input = document.getElementById('api-key') as HTMLInputElement;
+                                        if (input.type === 'password') {
+                                            input.type = 'text';
+                                        } else {
+                                            input.type = 'password';
+                                        }
+                                    }}
+                                >
+                                    <Eye className="h-4 w-4" />
+                                    <span className="sr-only">Toggle API Key visibility</span>
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="secret-key" className="text-sm font-medium">
+                                Secret Key
+                            </label>
+                            <div className="flex items-center space-x-2">
+                                <Input
+                                    id="secret-key"
+                                    type="password"
+                                    value="abcdef1234567890abcdef1234567890"
+                                    readOnly
+                                    className="font-mono"
+                                />
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => {
+                                        const input = document.getElementById('secret-key') as HTMLInputElement;
+                                        if (input.type === 'password') {
+                                            input.type = 'text';
+                                        } else {
+                                            input.type = 'password';
+                                        }
+                                    }}
+                                >
+                                    <Eye className="h-4 w-4" />
+                                    <span className="sr-only">Toggle Secret Key visibility</span>
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
                 <Card className="shadow-lg">
                     <CardHeader>
                         <h2 className="text-2xl font-semibold text-black">Change Buddy's Description</h2>

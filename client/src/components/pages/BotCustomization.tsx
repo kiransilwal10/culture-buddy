@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { motion, AnimatePresence } from "framer-motion"
 import { FileIcon, XIcon } from "lucide-react"
+import { useToast } from "@/hooks/use-toast.ts"
 
 interface FileWithPreview extends File {
     preview: string
@@ -16,6 +17,7 @@ export default function BotCustomization() {
     const [files, setFiles] = useState<FileWithPreview[]>([])
     const [botDescription, setBotDescription] = useState("")
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const {toast} = useToast()
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFiles = Array.from(event.target.files || []).map((file) => ({
