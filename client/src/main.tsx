@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./index.css";
 import { initializeApp } from "firebase/app";
+import { Toaster } from "@/components/ui/toaster"
 
 // Firebase configuration
 const firebaseConfig = {
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <ThemeProvider>
             <App />
+            <Toaster />
         </ThemeProvider>
     </React.StrictMode>
 );
