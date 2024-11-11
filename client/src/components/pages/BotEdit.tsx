@@ -70,7 +70,7 @@ export default function BotEdit() {
                 }
             
                 const responseData = await response.json();
-                if(files.length !== 0){
+                if(files.length == 0){
                     toast({
                         title: "Changes Saved",
                         description: "Your bot has been updated successfully.",
