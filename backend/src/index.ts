@@ -4,7 +4,7 @@ import userRoutes from './routes/firebaseRouter';
 import companyRoutes from './routes/companyRouter'
 import { chatbotResponse } from './controllers/gptController';
 import multer from 'multer';
-import { upsertDocuments, upsertJsonDocument } from './config/pinecone';
+import { upsertDocuments, upsertJsonDocument, upsertChatMessageToPinecone,upsertBotText } from './config/pinecone';
 import { getChatGptResponse } from './controllers/gptController';
 import { searchQuery } from './config/pinecone';
 const cors = require('cors');
@@ -64,6 +64,40 @@ app.post('/uploadJsonDocument', async (req, res) => {
     res.status(200).json({ message: 'JSON document uploaded successfully' });
   } catch (error) {
     console.error('Error uploading JSON document:', error);
+    res.status(500).json({ error: 'Failed to upload JSON document' });
+  }
+});
+
+app.post('/uploadText', async (req, res) => {
+  try {
+    const { botDescription} = req.body as { botDescription: string };
+
+    if (!botDescription) {
+      return res.status(400).json({ error: 'jsonData and subject are required' });
+    }
+
+    await upsertBotText(botDescription);
+
+    res.status(200).json({ message: 'Text uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading JSON document:', error);
+    res.status(500).json({ error: 'Failed to upload JSON document' });
+  }
+});
+
+app.post('/uploadChats', async (req, res) => {
+  try {
+    const { chat } = req.body as { chat: string };
+
+    if (!chat) {
+      return res.status(400).json({ error: 'jsonData and subject are required' });
+    }
+
+    await upsertChatMessageToPinecone(chat);
+
+    res.status(200).json({ message: 'Chat uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading chat messages:', error);
     res.status(500).json({ error: 'Failed to upload JSON document' });
   }
 });

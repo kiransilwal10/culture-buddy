@@ -21,6 +21,13 @@ interface Document {
   context: string;
 }
 
+interface Metadata {
+  subject: string;
+  context: string;
+  // Add other fields if needed
+}
+
+
 interface Vector {
   id: string;
   values: number[];
@@ -55,6 +62,8 @@ function getContentSize(content: string): number {
   return Buffer.byteLength(content, 'utf-8');
 }
 
+
+
 // Function to split document content if it exceeds the size limit
 function splitContent(content: string): string[] {
   const maxContentSize = 40960; // Pinecone's metadata limit in bytes
@@ -71,6 +80,123 @@ function splitContent(content: string): string[] {
 
   return [part1, part2]; // Return two parts of content
 }
+interface User {
+  id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  about: string;
+}
+
+export const upsertChatMessageToPinecone = async (chatMessage: string) => {
+  const embedding = await getEmbeddings(chatMessage);
+
+  const metadata = {
+    message: chatMessage,
+    timestamp: new Date().toISOString(), 
+    context: "ChatMessage",
+  };
+
+  const index = pc.Index(PINECONE_INDEX_NAME);
+  const currentVectorId = 'chat-record';
+
+  try {
+    // const queryResult = await index.query({
+    //   id: currentVectorId ,
+    //   topK: 1,   
+    //   includeMetadata: true,
+    // });
+    
+    const metadataParts = splitContent(JSON.stringify(metadata));
+
+    for (var i = 0; i < metadataParts.length;i++) {
+        await index.update({
+          id:`chat-record${i === 0 ? '' : '2'}`,
+          metadata: {
+            subject: "ChatMessage",  
+            context: metadataParts[i]as string, 
+          },
+        });
+    }
+
+
+    console.log(`Upserted to record`);
+  } catch (error) {
+    console.error("Error querying Pinecone:", error);
+  }
+};
+
+// Function to split metadata if the size exceeds the limit
+function splitMetadata(metadata: object): object[] {
+  const maxMetadataSize = 40960; // Pinecone's metadata limit in bytes
+  const metadataSize = Buffer.byteLength(JSON.stringify(metadata), 'utf8');
+
+  if (metadataSize <= maxMetadataSize) {
+    return [metadata]; // Return the single metadata object if it's within the size limit
+  }
+
+  // Split metadata into two parts if it exceeds the size limit
+  const halfMetadata = Math.ceil(Object.keys(metadata).length / 2);
+  const metadataPart1 = Object.fromEntries(Object.entries(metadata).slice(0, halfMetadata));
+  const metadataPart2 = Object.fromEntries(Object.entries(metadata).slice(halfMetadata));
+
+  return [metadataPart1, metadataPart2];
+}
+
+
+export const upsertUsersToPinecone = async (users: User[]) => {
+  // Combine all user details into a single string for embedding generation
+  const combinedUserDetails = users.map(user => {
+    return `${user.firstname} ${user.lastname}, Email: ${user.email}, About: ${user.about}`;
+  }).join(" | ");
+
+  // Generate embeddings for the combined user details
+  const embedding = await getEmbeddings(combinedUserDetails);
+
+  // Prepare metadata with all users' data
+  const metadata = {
+    users: users.map(user => ({
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      about: user.about,
+    })),
+    context: "EmployeeData",
+  };
+
+  // Fetch the current vector from Pinecone using its ID, e.g., 'all-users'
+  const index = pc.Index(PINECONE_INDEX_NAME);
+  const currentVectorId = 'all-users';
+
+  try {
+    // // Query Pinecone to check if the 'all-users' vector already exists
+    // const queryResult = await index.query({
+    //   topK: 1,
+    //   vector: await getEmbeddings("dummy"), // We don't care about the dummy vector, just querying by ID
+    //   filter: { id: currentVectorId }, // Use a filter to find the record by ID
+    //   includeMetadata: true,
+    // });
+
+
+    const metadataParts = splitContent(JSON.stringify(metadata));
+
+    for (var i = 0; i < metadataParts.length;i++) {
+        await index.update({
+          id:`all-users${i === 0 ? '' : '2'}`,
+          metadata: {
+            subject: "EmployeeData",  
+            context: metadataParts[i]as string, 
+          },
+        });
+    }
+
+    console.log(`Upserted torecord`);
+  } catch (error) {
+    console.error("Error querying Pinecone:", error);
+  }
+};
+
 
 // Function to upsert documents with content size check and split if necessary
 export const upsertDocuments = async (filePaths: string[]): Promise<void> => {
@@ -134,6 +260,36 @@ export const upsertJsonDocument = async (jsonData: object, subject: string): Pro
     },
   };
   await index.upsert([vector]);
+};
+
+export const upsertBotText = async (text: string) => {
+  const embedding = await getEmbeddings(text);
+
+  const index = pc.Index(PINECONE_INDEX_NAME);
+
+  try {
+    const metadataParts = splitContent(text);
+
+    for (const part of metadataParts) {
+      const uniqueId = `doc-${Date.now()}-${uuidv4()}`;
+      const vectors: Vector[] = [];
+      vectors.push({
+        id: uniqueId,
+        values: embedding,
+        metadata: {
+          subject: "BotInfo",  
+          context: part, 
+        },
+      });
+        // Upload the vectors to Pinecone
+      await index.upsert(vectors);
+    }
+
+
+    console.log(`Upserted to record`);
+  } catch (error) {
+    console.error("Error querying Pinecone:", error);
+  }
 };
 
 
