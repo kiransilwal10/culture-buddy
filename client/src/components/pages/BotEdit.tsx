@@ -25,10 +25,9 @@ export default function BotEdit() {
 
     useEffect(() => {
         // Simulating fetching existing bot data
-        setBotDescription("Your existing bot description goes here.")
+        setBotDescription("")
         setFiles([
-            { name: "existing-file-1.pdf", size: 1024 * 1024, preview: "", fileName: "existing-file-1.pdf" },
-            { name: "existing-file-2.docx", size: 2048 * 1024, preview: "", fileName: "existing-file-2.docx" },
+            { name: "existing-file-1.pdf", size: 1024 * 1024, preview: "", fileName: "handbook-1.pdf" },
         ] as FileWithPreview[])
     }, [])
 
@@ -83,7 +82,7 @@ export default function BotEdit() {
                 className="max-w-2xl mx-auto space-y-8"
             >
                 <div className="flex items-center justify-between">
-                    <h1 className="text-4xl font-semibold text-black">Buddy Control</h1>
+                    <h1 className="text-4xl font-semibold text-black">Buddy Hub</h1>
                     <Button variant="outline" size="icon">
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
@@ -115,8 +114,8 @@ export default function BotEdit() {
 
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <h2 className="text-2xl font-semibold text-black">Buddy's Description</h2>
-                        <p className="text-muted-foreground">Edit your bot's personality and purpose.</p>
+                        <h2 className="text-2xl font-semibold text-black">Change Buddy's Description</h2>
+                        <p className="text-muted-foreground">Write your bot's new personality and purpose.</p>
                     </CardHeader>
                     <CardContent>
                         <Textarea
@@ -130,8 +129,8 @@ export default function BotEdit() {
 
                 <Card className="shadow-lg">
                     <CardHeader>
-                        <h2 className="text-2xl font-semibold text-black">Manage Documents</h2>
-                        <p className="text-muted-foreground">Add or remove documents for your bot to learn from.</p>
+                        <h2 className="text-2xl font-semibold text-black">Add New Documents</h2>
+                        <p className="text-muted-foreground">Add or remove documents for your buddy to learn from.</p>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Input
@@ -177,7 +176,7 @@ export default function BotEdit() {
 
                 <div className="flex justify-end space-x-4">
                     <Button variant="outline">Cancel</Button>
-                    <Button onClick={handleSave}>
+                    <Button className="bg-main hover:bg-main" onClick={handleSave}>
                         <Save className="mr-2 h-4 w-4" /> Save Changes
                     </Button>
                 </div>
