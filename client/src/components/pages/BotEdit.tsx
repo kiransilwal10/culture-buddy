@@ -83,7 +83,7 @@ export default function BotEdit() {
                 className="max-w-2xl mx-auto space-y-8"
             >
                 <div className="flex items-center justify-between">
-                    <h1 className="text-4xl font-bold text-black">Buddy Control</h1>
+                    <h1 className="text-4xl font-semibold text-black">Buddy Control</h1>
                     <Button variant="outline" size="icon">
                         <ArrowLeft className="h-4 w-4" />
                     </Button>

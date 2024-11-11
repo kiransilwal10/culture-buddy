@@ -143,7 +143,7 @@ export function MyForm() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
             <Card className="w-full max-w-2xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">Create Your ChatBot</CardTitle>
+                    <CardTitle className="text-2xl font-semibold text-center">Create Your ChatBot</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (

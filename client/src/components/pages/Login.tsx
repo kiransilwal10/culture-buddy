@@ -119,7 +119,7 @@ function Login() {
                             />
                         </div>
                         {error && <div className="text-red-500">{error}</div>}
-                        <Button onClick={signInWithEmail} disabled={authing} className="w-full">
+                        <Button onClick={signInWithEmail} disabled={authing} className="w-full bg-main hover:bg-main">
                             Login
                         </Button>
                         <Button onClick={signInWithGoogle} disabled={authing} variant="outline" className="w-full">
