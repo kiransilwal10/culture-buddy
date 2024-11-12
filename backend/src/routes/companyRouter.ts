@@ -1,5 +1,5 @@
 import express from 'express';
-import { saveCompany,getCompanies,checkIfCompanyExists } from '../controllers/company';
+import { saveCompany,getCompanies,checkIfCompanyExists,saveChatMessage } from '../controllers/company';
 
 const router = express.Router();
 
@@ -11,5 +11,7 @@ router.get('/all', getCompanies);
 
 // Check if a company exists based on employer email
 router.post('/check', checkIfCompanyExists);
+
+router.post('/chat',saveChatMessage);
 
 export default router;

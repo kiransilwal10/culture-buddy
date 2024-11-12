@@ -6,8 +6,6 @@ const router = express.Router();
 // User routes
 router.post('/save', saveUser);
 router.get('/all', getUsers);
-router.get('/check', checkIfUserExists);
-
-
+router.post('/check', checkIfUserExists);
 
 export default router;
