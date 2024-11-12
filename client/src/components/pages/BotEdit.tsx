@@ -203,7 +203,7 @@ export default function BotEdit() {
                                 <Input
                                     id="api-key"
                                     type="password"
-                                    value="1234567890abcdef1234567890abcdef"
+                                    value="Zavb3SDVb52nbclCSwnbcl2d"
                                     readOnly
                                     className="font-mono"
                                 />
@@ -232,7 +232,7 @@ export default function BotEdit() {
                                 <Input
                                     id="secret-key"
                                     type="password"
-                                    value="abcdef1234567890abcdef1234567890"
+                                    value="akcu31scWvcbakcaacRT5vcScew"
                                     readOnly
                                     className="font-mono"
                                 />
