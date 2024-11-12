@@ -14,7 +14,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader,CardDescription, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 const formSchema = z.object({
@@ -140,167 +140,179 @@ export function MyForm() {
 
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-            <Card className="w-full max-w-2xl">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-semibold text-center">Create Your ChatBot</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {loading ? (
-                        <div className="flex flex-col items-center justify-center space-y-4">
-                            <Progress value={progress} className="w-full" />
-                            <p className="text-center text-gray-600 dark:text-gray-400">Creating your ChatBot...</p>
-                        </div>
-                    ) : (
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                <AnimatePresence mode="wait">
-                                    {step === 1 && (
-                                        <motion.div
-                                            key="step1"
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, x: 20 }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            <FormField
-                                                control={form.control}
-                                                name="companyname"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Company Name</FormLabel>
-                                                        <FormControl>
-                                                            <Input className="focus:" placeholder="Enter your company name" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="industry"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Industry</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="Enter your industry" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="companysize"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Company Size</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="number" placeholder="Enter company size" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="corevalues"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Core Values</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="Enter your core values" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </motion.div>
-                                    )}
-                                    {step === 2 && (
-                                        <motion.div
-                                            key="step2"
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, x: 20 }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            <FormField
-                                                control={form.control}
-                                                name="botname"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>ChatBot Name</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="Enter a name for your ChatBot" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="tone"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Tone</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="Enter the desired tone" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="personality"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Personality</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="Describe the bot's personality" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </form>
-                        </Form>
-                    )}
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                    {step === 2 && (
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => setStep(1)}
-                            className="w-[120px]"
-                        >
-                            Previous
-                        </Button>
-                    )}
-                    {step === 1 ? (
-                        <Button
-                            type="button"
-                            onClick={() => setStep(2)}
-                            className="w-[120px] ml-auto bg-main hover:bg-main"
-                        >
-                            Next
-                        </Button>
-                    ) : (
-                        <Button
-                            type="submit"
-                            onClick={form.handleSubmit(onSubmit)}
-                            className="w-[120px] ml-auto bg-main hover:bg-main"
-                        >
-                            Submit
-                        </Button>
-                    )}
-                </CardFooter>
-            </Card>
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-rose-100 p-4">
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="w-full max-w-md"
+            >
+                <Card className="w-full shadow-xl overflow-hidden border-l-4 border-purple-500">
+                    <div className="p-8">
+                        <CardHeader>
+                            <CardTitle className="text-3xl font-bold text-purple-800">Create Your ChatBot</CardTitle>
+                            <CardDescription className="text-pink-600">
+                                Fill out the details below to personalize your bot
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {loading ? (
+                                <div className="flex flex-col items-center justify-center space-y-4">
+                                    <Progress value={progress} className="w-full" />
+                                    <p className="text-center text-purple-700">Creating your ChatBot...</p>
+                                </div>
+                            ) : (
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                        <AnimatePresence mode="wait">
+                                            {step === 1 && (
+                                                <motion.div
+                                                    key="step1"
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="companyname"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="text-purple-700">Company Name</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Enter your company name" {...field} className="border-pink-300 focus:border-pink-500 focus:ring-pink-500" />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="industry"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Industry</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Enter your industry" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="companysize"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Company Size</FormLabel>
+                                                                <FormControl>
+                                                                    <Input type="number" placeholder="Enter company size" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="corevalues"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Core Values</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Enter your core values" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </motion.div>
+                                            )}
+                                            {step === 2 && (
+                                                <motion.div
+                                                    key="step2"
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="botname"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>ChatBot Name</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Enter a name for your ChatBot" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="tone"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Tone</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Enter the desired tone" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="personality"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Personality</FormLabel>
+                                                                <FormControl>
+                                                                    <Input placeholder="Describe the bot's personality" {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </form>
+                                </Form>
+                            )}
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                            {step === 2 && (
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setStep(1)}
+                                    className="w-[120px]"
+                                >
+                                    Previous
+                                </Button>
+                            )}
+                            {step === 1 ? (
+                                <Button
+                                    type="button"
+                                    onClick={() => setStep(2)}
+                                    className="w-[120px] ml-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                                >
+                                    Next
+                                </Button>
+                            ) : (
+                                <Button
+                                    type="submit"
+                                    onClick={form.handleSubmit(onSubmit)}
+                                    className="w-[120px] ml-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                                >
+                                    Submit
+                                </Button>
+                            )}
+                        </CardFooter>
+                    </div>
+                </Card>
+            </motion.div>
         </div>
-    )
+    );
 }
