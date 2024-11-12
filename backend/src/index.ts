@@ -138,7 +138,7 @@ app.post('/findSimilar', async (req: Request, res: Response) => {
     const context = searchResults.map((match) => match.metadata?.context).join('\n');
     console.log(searchResults);
     const userMemory = memory.get(userId) || [];
-    const prompt = `${context}\n\n${userMemory.join('\n')}\nUser (${userId}):Give the name of the person who likes ${query}.If there is no one,answer as NO ONE else say the name. Give two word answer.`;
+    const prompt = `${context}\n\n${userMemory.join('\n')}\nUser (${userId}):Give the name of the person who likes ${query} from EmployeeData.If there is no one,answer as NO ONE else say the name. Give two word answer.`;
     console.log(context);
 
     const reply = await getChatGptResponse(prompt);
