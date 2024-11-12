@@ -107,12 +107,39 @@ app.post('/chat', async (req: Request, res: Response) => {
   const { userId, query } = req.body as { userId: string; query: string };
 
   try {
-    const searchResults = await searchQuery(query);
+    const searchTerm = `${userId}: ${query}`;
+    const searchResults = await searchQuery(searchTerm);
     const context = searchResults.map((match) => match.metadata?.context).join('\n');
-
+    console.log(searchResults);
     const userMemory = memory.get(userId) || [];
-    const prompt = `${context}\n\n${userMemory.join('\n')}\nUser: ${query}\nAI:`;
-    console.log(prompt);
+    const prompt = `${context}\n\n${userMemory.join('\n')}\nUser (${userId}): ${query}\nAI:.Using the information provided in the context above, answer the given question without explicitly mentioning the source of the information.`;
+    console.log(context);
+
+    const reply = await getChatGptResponse(prompt);
+
+    userMemory.push(`User: ${query}`);
+    userMemory.push(`AI: ${reply}`);
+    if (userMemory.length > 10) userMemory.splice(0, userMemory.length - 10); 
+    memory.set(userId, userMemory);
+
+    res.json({ reply });
+  } catch (error) {
+    console.error('Error handling chat request:', error);
+    res.status(500).json({ error: 'Failed to process chat request' });
+  }
+});
+
+app.post('/findSimilar', async (req: Request, res: Response) => {
+  const { userId, query } = req.body as { userId: string; query: string };
+
+  try {
+    const searchTerm = `${userId}: ${query}`;
+    const searchResults = await searchQuery(searchTerm);
+    const context = searchResults.map((match) => match.metadata?.context).join('\n');
+    console.log(searchResults);
+    const userMemory = memory.get(userId) || [];
+    const prompt = `${context}\n\n${userMemory.join('\n')}\nUser (${userId}):Give the name of the person who likes ${query}.If there is no one,answer as NO ONE else say the name. Give two word answer.`;
+    console.log(context);
 
     const reply = await getChatGptResponse(prompt);
 

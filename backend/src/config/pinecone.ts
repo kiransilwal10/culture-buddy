@@ -78,14 +78,13 @@ function splitContent(content: string): string[] {
   const part1 = content.slice(0, midPoint);
   const part2 = content.slice(midPoint);
 
-  return [part1, part2]; // Return two parts of content
+  return [part1, part2]; 
 }
 interface User {
-  id: string;
-  firstname: string;
-  lastname: string;
+  name: string;
   email: string;
   about: string;
+  calendar: string;
 }
 
 export const upsertChatMessageToPinecone = async (chatMessage: string) => {
@@ -98,15 +97,7 @@ export const upsertChatMessageToPinecone = async (chatMessage: string) => {
   };
 
   const index = pc.Index(PINECONE_INDEX_NAME);
-  const currentVectorId = 'chat-record';
-
   try {
-    // const queryResult = await index.query({
-    //   id: currentVectorId ,
-    //   topK: 1,   
-    //   includeMetadata: true,
-    // });
-    
     const metadataParts = splitContent(JSON.stringify(metadata));
 
     for (var i = 0; i < metadataParts.length;i++) {
@@ -147,7 +138,7 @@ function splitMetadata(metadata: object): object[] {
 export const upsertUsersToPinecone = async (users: User[]) => {
   // Combine all user details into a single string for embedding generation
   const combinedUserDetails = users.map(user => {
-    return `${user.firstname} ${user.lastname}, Email: ${user.email}, About: ${user.about}`;
+    return `Name : ${user.name}, Email: ${user.email}, About: ${user.about}, Calendar: ${user.calendar}`;
   }).join(" | ");
 
   // Generate embeddings for the combined user details
@@ -156,11 +147,10 @@ export const upsertUsersToPinecone = async (users: User[]) => {
   // Prepare metadata with all users' data
   const metadata = {
     users: users.map(user => ({
-      id: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
+      name: user.name,
       email: user.email,
       about: user.about,
+      calendar: user.calendar,
     })),
     context: "EmployeeData",
   };
@@ -180,16 +170,21 @@ export const upsertUsersToPinecone = async (users: User[]) => {
 
 
     const metadataParts = splitContent(JSON.stringify(metadata));
-
+    const vectors: Vector[] = [];
     for (var i = 0; i < metadataParts.length;i++) {
-        await index.update({
-          id:`all-users${i === 0 ? '' : '2'}`,
-          metadata: {
-            subject: "EmployeeData",  
-            context: metadataParts[i]as string, 
-          },
-        });
-    }
+      const uniqueId = `all-users${i === 0 ? '' : '2'}`;
+      const vectors: Vector[] = [];
+      vectors.push({
+        id: uniqueId,
+        values: embedding,
+        metadata: {
+          subject: "EmployeeData", 
+          context: metadataParts[i]as string, 
+        },
+      });
+        // Upload the vectors to Pinecone
+      await index.upsert(vectors);
+    }     
 
     console.log(`Upserted torecord`);
   } catch (error) {
@@ -298,7 +293,7 @@ export const searchQuery = async (query: string): Promise<Vector[]> => {
     const queryEmbedding = await getEmbeddings(query);
   
     const results = await index.query({
-      topK: 1,
+      topK: 2,
       vector: queryEmbedding,
       includeMetadata: true,
     });

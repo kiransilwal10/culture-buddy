@@ -41,7 +41,7 @@ function Login() {
             const checkResult = await checkResponse.json();
     
             if (checkResponse.ok) {
-                navigate('/bot-edit');
+                navigate('/bot-customization');
                 const company = checkResult.company;
                 const companyDetail = {
                     "companyName": company.companyName,
