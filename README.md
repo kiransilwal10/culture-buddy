@@ -1,4 +1,4 @@
-🏆 Hatchathon 2024 — People's Choice Award Winner
+🏆 Hatchathon 2024
 Culture Buddy
 An AI chatbot designed to be integrated into a company’s internal chat system (e.g. Slack, Teams) to streamline onboarding, connect employees with shared interests, and foster a healthier workplace culture.
 
